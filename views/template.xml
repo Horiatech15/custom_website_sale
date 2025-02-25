@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+
+
+    <template id="custom_billing_address_row" inherit_id="website_sale.billing_address_row">
+        <div t-if="has_delivery" position="attributes">
+            <attribute name="t-att-style">'display: none;!important;'</attribute>
+        </div>
+
+        <h4 position="attributes">
+            <attribute name="t-att-style">'display: none;!important;'</attribute>
+        </h4>
+    </template>
+
+<!--<template id="website_sale.checkout">-->
+<!--        <t t-call="website_sale.checkout_layout">-->
+<!--            <t t-set="additional_title">Shop - Checkout</t>-->
+<!--            <t t-set="redirect" t-valuef="/shop/checkout"/>-->
+<!--            <t t-set="same_shipping" t-value="bool(order.partner_shipping_id==order.partner_invoice_id or only_services)" />-->
+<!--            <div id="shop_checkout">-->
+<!--                <t t-if="order._has_deliverable_products()">-->
+<!--                    <t t-call="website_sale.delivery_address_row">-->
+<!--                        <t t-set="addresses" t-value="delivery_addresses"/>-->
+<!--                    </t>-->
+<!--                    <t t-call="website_sale.delivery_form">-->
+<!--                        <t t-set="selected_dm_id" t-value="order.carrier_id.id"/>-->
+<!--                    </t>-->
+<!--                </t>-->
+<!--                <t t-call="website_sale.billing_address_row" type="hidden">-->
+<!--                    <t t-set="addresses" t-value="billing_addresses"/>-->
+<!--                </t>-->
+<!--            </div>-->
+<!--        </t>-->
+<!--    </template>-->
+
+
+<!--    <template id="website_sale.address_row">-->
+<!--        <div t-att-class="('all_billing' if is_invoice else 'all_delivery')-->
+<!--                          + ' row row-cols-md-2 row-cols-lg-3 g-3 flex-nowrap flex-md-wrap'"-->
+<!--        >-->
+<!--            <div t-foreach="addresses" t-as="addr" class="one_kanban col-md">-->
+<!--                <t t-call="website_sale.address_kanban">-->
+<!--                    <t t-set="contact" t-value="addr"/>-->
+<!--                    <t t-set="selected" t-value="addr == selected_address"/>-->
+<!--                </t>-->
+<!--            </div>-->
+<!--            <div-->
+<!--                t-if="is_invoice or not order.website_id.is_public_user()" class="one_kanban col-md"-->
+<!--            >-->
+<!--                &lt;!&ndash; We don't allow public users to have multiple delivery addresses. &ndash;&gt;-->
+<!--                <t t-if="is_invoice">-->
+<!--                    <t t-set="new_address_href" t-valuef="/shop/address?address_type=billing"/>-->
+<!--                </t>-->
+<!--                <t t-else="">-->
+<!--                    <t-->
+<!--                        t-set="new_address_href"-->
+<!--                        t-valuef="/shop/address?address_type=delivery&amp;use_delivery_as_billing={{use_delivery_as_billing}}"-->
+<!--                    />-->
+<!--                </t>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </template>-->
+
+    <template id="website_sale.address_on_payment" name="Address on payment">
+        <div class="card">
+            <div class="card-body" id="delivery_and_billing">
+                <a class="float-end no-decoration" href="/shop/checkout"><i class="fa fa-pencil me-1"/>Edit</a>
+                <t
+                    t-set="use_delivery_as_billing"
+                    t-value="order.partner_invoice_id == order.partner_shipping_id and not order.pickup_location_data"
+                />
+                <div t-if="not use_delivery_as_billing and order._has_deliverable_products()" groups="account.group_delivery_invoice_address">
+<!--                    <t t-if="order.pickup_location_data">-->
+<!--                        <b>Deliver to pickup point: </b>-->
+<!--                        <t t-out="order.pickup_location_data.get('name', '') + ', ' + order.pickup_location_data.get('street', '') + ' ' + order.pickup_location_data.get('zip_code', '') + ' ' + order.pickup_location_data.get('city','')"/>-->
+<!--                    </t>-->
+<!--                    <t t-else="">-->
+                        <b>Delivery11111: </b>
+                        <span
+                            t-out="order.partner_shipping_id"
+                            t-options="dict(widget='contact', fields=['name', 'city'], no_marker=True, separator=', ')"
+                            class="address-inline"
+                        />
+<!--                    </t>-->
+                </div>
+                <div>
+                    <b><t t-if="use_delivery_as_billing and not only_services">Delivery2222: </t></b>
+<!--                    <span t-esc="order.partner_invoice_id"-->
+<!--                          t-options="dict(widget='contact', fields=['name', 'city'], no_marker=True, separator=', ')"-->
+<!--                          class="address-inline"/>-->
+                </div>
+            </div>
+        </div>
+    </template>
+
+
+    <template id="custom_address" inherit_id="website_sale.address">
+
+        <div id="company_name_div" position="attributes">
+            <attribute name="t-att-style">'display: none;!important;'</attribute>
+        </div>
+
+        <div id="div_vat" position="attributes">
+            <attribute name="t-att-style">'display: none;!important;'</attribute>
+        </div>
+        <div id="div_street2" position="attributes">
+            <attribute name="t-att-style">'display: none;!important;'</attribute>
+        </div>
+
+        <div role="alert" position="attributes">
+            <attribute name="t-att-style">'display: none;!important;'</attribute>
+        </div>
+
+        <div id="div_state" position="after">
+            <div id="div_city_id" class="col-lg-6 mb-3" >
+                <label class="col-form-label" for="city_id">City</label>
+                <select id="city_id" name="city_id" class="form-select" data-init="1">
+                    <option value="">City...</option>
+                    <t t-foreach="state_cities" t-as="city">
+                        <option t-att-value="city.id"
+                                t-att-selected="city.id == partner_sudo.city_id.id">
+                            <t t-out="city.name" />
+                        </option>
+                    </t>
+                </select>
+            </div>
+        </div>
+    </template>
+
+
+</odoo>
